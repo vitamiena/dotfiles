@@ -124,3 +124,5 @@ SPROMPT="%{$fg[red]%}%{$suggest%}----> もしかして %B%r%b %{$fg[red]%} [そ�
 alias dt='echo 乙'
 alias e='emacs'
 alias gb='echo goodbye! ; sleep 1 ; logout'
+alias ls='ls --color=auto -F'
+alias rm='rm -i'
