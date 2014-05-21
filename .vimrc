@@ -44,7 +44,7 @@ set wrap
 " 入力されているテキストの最大幅を無効にする
 set textwidth=0
 " 不可視文字を表示
-set listchars=tab:≫-,trail:-,extends:≫,precedes:≪,nbsp:%,eol:?
+set listchars=tab:≫-,trail:-,extends:≫,precedes:≪,nbsp:%,eol:$
 " インデントをshiftwidthの倍数に丸める
 set shiftround
 " 補完の際の大文字小文字の区別しない
