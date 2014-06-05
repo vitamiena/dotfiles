@@ -50,7 +50,7 @@ set shiftround
 " 補完の際の大文字小文字の区別しない
 set infercase
 " 文字がない場所にもカーソルを移動できるようにする
-set virtualedit=all
+" set virtualedit=all
 " 変更中のファイルでも、保存しないで他のファイルを表示
 set hidden
 " 新しく開く代わりにすでに開いてあるバッファを開く
