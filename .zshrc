@@ -129,3 +129,9 @@ alias rm='rm -i'
 alias la='ls -a'
 alias ll='ls -l'
 alias df='df -h'
+
+#----------------------------------------------------
+# PATH
+#----------------------------------------------------
+
+export PATH="/home/usr/assist/_vitamin/.cask/bin:$PATH"
