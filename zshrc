@@ -134,4 +134,4 @@ alias df='df -h'
 # PATH
 #----------------------------------------------------
 
-export PATH="/home/usr/assist/_vitamin/.cask/bin:$PATH"
+export PATH="${HOME}/.cask/bin:$PATH"
