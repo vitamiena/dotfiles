@@ -218,11 +218,20 @@ alias ll='ls -l'
 alias df='df -h'
 alias ta='tmux a'
 alias tls='tmux ls'
+alias gs='git status -s'
+alias ga='git add'
+alias gcm='git commit -m'
+alias gb='git branch'
+alias gcd='git checkout'
 
 #----------------------------------------------------
 # PATH
 #----------------------------------------------------
-
 export PATH="${HOME}/.cask/bin:$PATH"
 
+#----------------------------------------------------
+# 環境変数
+#----------------------------------------------------
+real_path=`readlink -f $HOME/.zshrc`
+zsh_dir=`(cd $(dirname $real_path); pwd)`
 eval "$(direnv hook zsh)"

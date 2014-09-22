@@ -10,13 +10,17 @@ do
   ln -fs $src $HOME/.$file
 done
 
+(
+cd zsh.d
+./install.sh
+)
+
 if [ ! -d "${HOME}/.emacs.d" ]; then
     git clone git@github.com:vitamiena/.emacs.d.git ~/.emacs.d
 fi
 
 if [ ! -d "${HOME}/.cask" ]; then
-    curl -fsSkL https://raw.github.com/cask/cask/master/go | python 
+    curl -fsSkL https://raw.github.com/cask/cask/master/go | python
     export PATH="${HOME}/.cask/bin:${PATH}"
     (cd $HOME/.emacs.d; cask)
 fi
-
