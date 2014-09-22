@@ -162,7 +162,7 @@ function set_prompt {
 
     # プロンプト指定
     PROMPT="
-[%n@%m] $(vcs_info_wrapper)
+%F{5}[%F{2}%n%f@%F{3}%m%F{5}] $(vcs_info_wrapper)
 %(?.%{$fg[green]%}.%{$fg[green]%})%(?!---->!---->)%{${reset_color}%}"
 
     RPROMPT="%{${fg[yellow]}%}[%30<....<%~]%{${reset_color}%}"
