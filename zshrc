@@ -43,7 +43,7 @@ setopt auto_list
 # 補完候補をグループ別に表示する
 zstyle ':completion:*' menu select
 zstyle ':completion:*' format '%B%d%b'
-zstyle ':completion:*' group-name 
+zstyle ':completion:*' group-name
 #コマンドに対する補完機能
 autoload -U compinit
 compinit
@@ -95,7 +95,7 @@ setopt extended_history
 #-------------------------------------------------------------------
 # プロンプト設定
 #-------------------------------------------------------------------
-
+autoload add-zsh-hook
 # 色設定
 autoload -U colors; colors
 # もしかして機能
@@ -103,19 +103,106 @@ setopt correct
 # PCRE 互換の正規表現を使う
 setopt re_match_pcre
 
+# gitの表示設定
 # プロンプトが表示されるたびにプロンプト文字列を評価、置換する
-setopt prompt_subst
+function branch-status-check {
+    local prefix branchname suffix
+    # .gitの中だから除外
+    if [[ "$PWD" =~ '/\.git(/.*)?$' ]]; then
+        return
+    fi
+    branchname=`get-branch-name`
+    # ブランチ名が無いので除外
+    if [[ -z $branchname ]]; then
+        return
+    fi
+    prefix=`get-branch-status` #色だけ返ってくる
+    suffix='%{'${reset_color}'%}'
+    echo "%{$fg[grey]%}"${prefix}${branchname}${suffix}
+}
+function get-branch-name {
+    # gitディレクトリじゃない場合のエラーは捨てます
+    echo `git rev-parse --abbrev-ref HEAD 2> /dev/null`
+}
 
-# プロンプト指定
-PROMPT="
-[%n@%m] 
-%(?.%{$fg[green]%}.%{$fg[green]%})%(?!---->!---->)%{${reset_color}%} "
+function get-branch-status {
+    local res color
+    output=`git status --short 2> /dev/null`
+    if [ -z "$output" ]; then
+        res=':' # status Clean
+        color='%{'${fg[green]}'%}'
+    elif [[ $output =~ "[\n]?\?\? " ]]; then
+        res='?:' # Untracked
+        color='%{'${fg[yellow]}'%}'
+    elif [[ $output =~ "[\n]? M " ]]; then
+        res='M:' # Modified
+        color='%{'${fg[red]}'%}'
+    else
+        res='A:' # Added to commit
+        color='%{'${fg[cyan]}'%}'
+    fi
+    # echo ${color}${res}'%{'${reset_color}'%}'
+    echo ${color} # 色だけ返す
+}
 
-RPROMPT="%{${fg[yellow]}%}[%30<....<%~]%{${reset_color}%}"
-# プロンプト指定(コマンドの続き)
-PROMPT2='[%n]> '
-# もしかして時のプロンプト指定
-SPROMPT="%{$fg[red]%}%{$suggest%}----> もしかして %B%r%b %{$fg[red]%} [そう!(y), 違う!(n),a,e]:${reset_color} "
+vcs_info_wrapper() {
+    vcs_info
+    if [ -n "$vcs_info_msg_0_" ]; then
+        echo "%{$fg[grey]%}${vcs_info_msg_0_}%{$reset_color%}$del"
+    fi
+}
+
+autoload -Uz vcs_info
+function set_prompt {
+    zstyle ':vcs_info:*' actionformats '%F{5}[%F{2}%b%F{7}:%F{6}%r%F{3}|%F{1}%a%F{5}]%f'
+    zstyle ':vcs_info:*' formats "%F{5}[%F{2}%r%F{7}:$(branch-status-check)%F{5}]%f"
+    zstyle ':vcs_info:*' enable git
+
+
+
+    # プロンプト指定
+    PROMPT="
+[%n@%m] $(vcs_info_wrapper)
+%(?.%{$fg[green]%}.%{$fg[green]%})%(?!---->!---->)%{${reset_color}%}"
+
+    RPROMPT="%{${fg[yellow]}%}[%30<....<%~]%{${reset_color}%}"
+    # プロンプト指定(コマンドの続き)
+    PROMPT2='[%n]> '
+    # もしかして時のプロンプト指定
+    SPROMPT="%{$fg[red]%}%{$suggest%}----> もしかして %B%r%b %{$fg[red]%} [そう!(y), 違う!(n),a,e]:${reset_color} "
+}
+
+function precmd {
+  set_prompt
+}
+
+# # プロンプト指定
+# PROMPT="
+# [%n@%m] $(get-branch-name)
+# %(?.%{$fg[green]%}.%{$fg[green]%})%(?!---->!---->)%{${reset_color}%}"
+
+# RPROMPT="%{${fg[yellow]}%}[%30<....<%~]%{${reset_color}%}"
+# # プロンプト指定(コマンドの続き)
+# PROMPT2='[%n]> '
+# # もしかして時のプロンプト指定
+# SPROMPT="%{$fg[red]%}%{$suggest%}----> もしかして %B%r%b %{$fg[red]%} [そう!(y), 違う!(n),a,e]:${reset_color} "
+
+#----------------------------------------------------
+# man
+#----------------------------------------------------
+
+man() {
+  env \
+    LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+    LESS_TERMCAP_md=$(printf "\e[1;31m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;32m") \
+    man "$@"
+}
+
 
 #----------------------------------------------------
 # alias
@@ -129,9 +216,13 @@ alias rm='rm -i'
 alias la='ls -a'
 alias ll='ls -l'
 alias df='df -h'
+alias ta='tmux a'
+alias tls='tmux ls'
 
 #----------------------------------------------------
 # PATH
 #----------------------------------------------------
 
-export PATH="/home/usr/assist/_vitamin/.cask/bin:$PATH"
+export PATH="$HOME/.cask/bin:$PATH"
+
+eval "$(direnv hook zsh)"
