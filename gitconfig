@@ -3,3 +3,5 @@
 	email = s13t210@stmail.eng.kagawa-u.ac.jp
 [color]
 	ui = auto
+[alias]
+	co = checkout
