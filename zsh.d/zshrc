@@ -106,7 +106,7 @@ setopt extended_history
 
 #-------------------------------------------------------------------
 # プロンプト設定
-cx#-------------------------------------------------------------------
+#-------------------------------------------------------------------
 autoload add-zsh-hook
 # 色設定
 autoload -U colors; colors
@@ -238,4 +238,4 @@ alias gcm='git commit -m'
 alias gco='git commit'
 alias gb='git branch'
 alias gcd='git checkout'
-alias glg='git log --graph --pretty=format:'%Cred%h%Creset - %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%C(yellow)%d%Creset'
+alias glg="git log --graph --pretty=format:'%Cred%h%Creset - %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%C(yellow)%d%Creset"
