@@ -1,4 +1,7 @@
 base_path=`pwd`
 echo "creating symlinks.."
 
-ln -sf $base_path/zshrc $HOME/.zshrc
+for file in zshrc zshenv
+do
+  ln -sf $base_path/$file $HOME/.$file
+done
