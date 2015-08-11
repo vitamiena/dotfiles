@@ -26,7 +26,6 @@ which direnv > /dev/null && eval "$(direnv hook zsh)"
 # ssh-agent
 #----------------------------------------------------
 
-eval `ssh-agent`
 export SOCK="/tmp/ssh-agent-$USER"
 if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]; then
   rm -f $SOCK
