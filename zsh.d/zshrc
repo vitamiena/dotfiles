@@ -20,7 +20,19 @@ export PATH="${HOME}/.cask/bin:$PATH"
 #----------------------------------------------------
 real_path=`readlink -f $HOME/.zshrc`
 zsh_dir=`(cd $(dirname $real_path); pwd)`
-eval "$(direnv hook zsh)"
+which direnv > /dev/null && eval "$(direnv hook zsh)"
+
+#----------------------------------------------------
+# ssh-agent
+#----------------------------------------------------
+
+eval `ssh-agent`
+export SOCK="/tmp/ssh-agent-$USER"
+if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]; then
+  rm -f $SOCK
+  ln -sf $SSH_AUTH_SOCK $SOCK
+  export SSH_AUTH_SOCK=$SOCK
+fi
 
 #----------------------------------------------------------------
 #オプション
