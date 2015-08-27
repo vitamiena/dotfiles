@@ -15,7 +15,8 @@ cd zsh.d
 ./install.sh
 )
 
-if [ ! -d "${HOME}/.emacs.d" ]; then
+if [ ! -d "${HOME}/.emacs.d/inits/" ]; then
+    rm -rf "${HOME}/.emacs.d"
     git clone git@github.com:vitamiena/.emacs.d.git ~/.emacs.d
 fi
 
