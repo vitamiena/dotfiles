@@ -1,21 +1,21 @@
 #!/bin/bash
 
-if [ $# -lt 1 ] 
+if [ $# -lt 1 ]
 then
   echo 'please input group file and passwd file'
   exit 1
 fi
 
 group_path='group_tmp'
-path_to_tmp='pass_tmp'
+passwd_tmp='passwd_tmp'
 
 sed -e 's/:/ /g' -e '/^ *$/d' $1 > ${group_path}
-sed -e 's/ /-/g' -e 's/:/ /g' -e '/^ *$/d' $2 > ${path_to_tmp}
+sed -e 's/ /-/g' -e 's/:/ /g' -e '/^ *$/d' $2 > ${passwd_tmp}
 
 while read line
 do
-  arr=(`echo $line`)  
-  groupmod  ${arr[0]}
+  arr=(`echo $line`)
+  groupmod  ${arr[0]} > /dev/null
   if [ $? -ne 0 ]
   then
     groupadd -g ${arr[2]} ${arr[0]}
@@ -26,10 +26,13 @@ while read line
 do
   arr=(`echo $line`)
   mkdir -p `echo ${arr[5]} | sed -e 's/\/[^\/]*$//g'`
-  userdel ${arr[0]}
-  useradd -u ${arr[2]} -g ${arr[3]} -c "`echo ${arr[4]} | sed -e 's/-/ /g'`" -md ${arr[5]} -s ${arr[6]} ${arr[0]}
+  id ${arr[0]} > /dev/null
+  if [ $? -ne 0 ]
+  then
+      useradd -u ${arr[2]} -g ${arr[3]} -c "`echo ${arr[4]} | sed -e 's/-/ /g'`" -md ${arr[5]} -s ${arr[6]} ${arr[0]}
+  fi
   echo ${arr[0]}
-done <${path_to_tmp}
+done <${passwd_tmp}
 
 rm -f ${group_path}
-rm -f ${path_to_tmp}
+rm -f ${passwd_tmp}
