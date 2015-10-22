@@ -8,4 +8,3 @@ export EDITOR="emacs"
 #----------------------------------------------------
 real_path=`readlink -f $HOME/.zshrc`
 zsh_dir=`(cd $(dirname $real_path); pwd)`
-eval "$(direnv hook zsh)"
