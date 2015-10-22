@@ -20,7 +20,7 @@ export PATH="${HOME}/.cask/bin:$PATH"
 #----------------------------------------------------
 real_path=`readlink -f $HOME/.zshrc`
 zsh_dir=`(cd $(dirname $real_path); pwd)`
-which direnv > /dev/null && eval "$(direnv hook zsh)"
+which direnv > /dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 #----------------------------------------------------
 # ssh-agent
