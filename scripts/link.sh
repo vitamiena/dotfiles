@@ -1,12 +1,12 @@
 #!/bin/bash
 
 relative_dir=`dirname $0`
-dotfiles_dir=`(cd $relative_dir; pwd)`
-echo $dotfiles_dir
+project_root=`(cd $relative_dir..; pwd)`
+echo $project_root
 
 for file in vimrc tmux.conf gitconfig
 do
-  src=$dotfiles_dir/$file
+  src=$project_root/$file
   ln -fs $src $HOME/.$file
 done
 
