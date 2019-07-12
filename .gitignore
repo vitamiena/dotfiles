@@ -1,0 +1,10 @@
+projectile-bookmarks.eld
+
+emacs.d/elpa/*
+emacs.d/url/*
+emacs.d/bookmarks
+emacs.d/eshell/*
+emacs.d/ac-comphist.dat
+emacs.d/.cask/*
+emacs.d/*.back
+emacs.d/recentf
