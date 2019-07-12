@@ -24,6 +24,7 @@ which direnv > /dev/null 2>&1 && eval "$(direnv hook zsh)"
 if [ -f ${HOME}/.proxy ]; then
   source ${HOME}/.proxy
 fi
+
 #----------------------------------------------------
 # ssh-agent
 #----------------------------------------------------
@@ -33,6 +34,38 @@ if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]; then
   rm -f $SOCK
   ln -sf $SSH_AUTH_SOCK $SOCK
   export SSH_AUTH_SOCK=$SOCK
+fi
+
+SSH_ENV=${HOME}/.ssh/environment
+SSHAGENT=/usr/bin/ssh-agent
+SSHAGENTARGS="-s"
+
+function start_agent {
+    ${SSHAGENT} | sed 's/^echo/#echo/' > ${SSH_ENV}
+    chmod 600 ${SSH_ENV}
+    . ${SSH_ENV} > /dev/null
+    ssh-add
+}
+
+if [ -f "${SSH_ENV}" ]; then
+    . ${SSH_ENV} > /dev/null
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent
+    }
+    if [[ -z `ssh-add -l | grep "${HOME}/.ssh/id_"` ]]; then
+        ssh-add
+    fi
+else
+    start_agent
+fi
+
+#----------------------------------------------------
+# brew
+#----------------------------------------------------
+if command -v brew > /dev/null; then
+  if [ -f $(brew --prefix)/etc/brew-wrap ];then
+    source $(brew --prefix)/etc/brew-wrap
+  fi
 fi
 
 #----------------------------------------------------------------
@@ -262,3 +295,4 @@ alias gcd='git checkout'
 alias gd='git diff'
 alias gdh='git diff HEAD'
 alias glg="git log --graph --pretty=format:'%Cred%h%Creset - %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%C(yellow)%d%Creset'"
+alias ghcd='cd $HOME/.ghq/$(ghq list | fzf --reverse --ansi)'
