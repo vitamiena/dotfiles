@@ -44,6 +44,16 @@ base_path=`pwd`
 echo "creating emacs symlinks.."
 if [ ! -d "${HOME}/.emacs.d/inits/" ]; then
     rm -rf "${HOME}/.emacs.d"
-    ln -s $base_path/ $HOME/.emacs.d
+    ln -fs $base_path/ $HOME/.emacs.d
 fi
 )
+
+# SSH
+echo "creating ssh symlinks.."
+mkdir -p ${PWD}/.ssh
+ln -fs ${PWD}/ssh/config ${HOME}/.ssh/config
+
+# brew
+echo "creating brew symlinks.."
+mkdir -p ${HOME}/.config/brewfile
+ln -fs ${PWD}/brew/Brewfile ${HOME}/.config/brewfile/Brewfile
