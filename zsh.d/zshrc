@@ -21,7 +21,9 @@ export PATH="${HOME}/dotfiles/bin:${HOME}/.cask/bin:${PATH}"
 real_path=`readlink -f $HOME/.zshrc`
 zsh_dir=`(cd $(dirname $real_path); pwd)`
 which direnv > /dev/null 2>&1 && eval "$(direnv hook zsh)"
-
+if [ -f ${HOME}/.proxy ]; then
+  source ${HOME}/.proxy
+fi
 #----------------------------------------------------
 # ssh-agent
 #----------------------------------------------------
